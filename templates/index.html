@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>INFOISCHIA AI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <!-- partial:index.partial.html -->
+
+  <section class="msger">
+    <div style="display: flex; justify-content: center;">
+      <!-- <img 
+        src="{{ url_for('static', filename='images/image 1 (1).svg') }}" 
+        width="30%"
+        height="70%"
+        style="margin-left: 300px; margin-top: 10px;"
+        alt=""> -->
+      <span style="font-size: 25px; font-weight: bold; color: blueviolet; margin-bottom: 10px; margin-top: 10px;">AI
+        Chatbot</span>
+    </div>
+    <header class="msger-header">
+      <div class="msger-header-title">
+        <!-- <i class="fas fa-bug"></i> Travel Chatbot powered by Satesfy (M Talha) <i class="fas fa-bug"></i> -->
+        <i class="fas fa-bug"></i> Chatbot powered by AsadUllah Siddique <i class="fas fa-bug"></i>
+        <!-- <form type="submit" class="reset-memory-btn">
+          <button 
+            style="padding: 10px; border-radius: 10px; background-color: violet; color: white; font-weight: bold; border: none; cursor: pointer; margin-top: 5px;"
+          >
+            Reset Memory
+          </button>
+        </form> -->
+      </div>
+    </header>
+    <main class="msger-chat">
+      <div class="msg left-msg">
+        <div class="msg-img" style="background-image: url(https://freesvg.org/img/1538298822.png)"></div>
+        <div class="msg-bubble">
+          <div class="msg-info">
+            <div class="msg-info-name">Chatbot</div>
+            <div class="msg-info-time">just now</div>
+          </div>
+          <div class="msg-text">
+            Hi, Good to see you. Ask anything about our hotels. How are you doing today?<br>
+            <br>
+          </div>
+        </div>
+      </div>
+    </main>
+    <form class="msger-inputarea">
+      <input type="text" class="msger-input" id="textInput" placeholder="Enter your message...">
+      <button type="submit" class="msger-send-btn">Send</button>
+    </form>
+  </section>
+  <!-- partial -->
+  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
+  <script>
+    const msgerForm = get(".msger-inputarea");
+    const msgerInput = get(".msger-input");
+    const msgerChat = get(".msger-chat");
+    // Icons made by Freepik from www.flaticon.com
+    const BOT_IMG = "https://freesvg.org/img/1538298822.png";
+    const PERSON_IMG = "https://freesvg.org/img/1367934593.png";
+    const BOT_NAME = "ChatBot";
+    const PERSON_NAME = "You";
+
+    // Reset Chat
+    // const resetMemoryBtn = get('.reset-memory-btn');
+    // resetMemoryBtn.addEventListener("submit", event => {
+    //   event.preventDefault();
+    //   $.get("/reset").done(function (data) {
+    //     appendMessage(BOT_NAME, BOT_IMG, "left", "Memory Reset Done");
+    //   });
+    // });
+
+    msgerForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const msgText = msgerInput.value;
+      // console.log("msgText", msgText)
+      if (!msgText) return;
+      appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+      msgerInput.value = "";
+      botResponse(msgText);
+    });
+    function appendMessage(name, img, side, text) {
+      //   Simple solution for small apps
+      const msgHTML = `
+<div class="msg ${side}-msg">
+  <div class="msg-img" style="background-image: url(${img})"></div>
+  <div class="msg-bubble">
+    <div class="msg-info">
+      <div class="msg-info-name">${name}</div>
+      <div class="msg-info-time">${formatDate(new Date())}</div>
+    </div>
+    <div class="msg-text">${text}</div>
+  </div>
+</div>
+`;
+      msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+      msgerChat.scrollTop += 500;
+    }
+    function botResponse(rawText) {
+
+        // Bot Response
+        $.get("/chat", { msg: rawText }).done(function (data) {
+          // console.log(rawText);
+          // console.log(data);
+          const msgText = data;
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+        });
+      
+
+    }
+    // Utils
+    function get(selector, root = document) {
+      return root.querySelector(selector);
+    }
+    function formatDate(date) {
+      const h = "0" + date.getHours();
+      const m = "0" + date.getMinutes();
+      return `${h.slice(-2)}:${m.slice(-2)}`;
+    }
+  </script>
+</body>
+
+</html>
